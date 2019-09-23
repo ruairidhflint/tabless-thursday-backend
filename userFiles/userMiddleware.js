@@ -19,6 +19,15 @@ function checkAllFieldsArePresent(req, res, next) {
   }
 }
 
+function checkLoginFieldsArePresent(req, res, next) {
+  const { email, password } = req.body;
+  if (email && password) {
+    next();
+  } else {
+    res.status(400).json({ message: 'Please ensure all fields are present.' });
+  }
+}
+
 function checkEmailIsValid(req, res, next) {
   const { email } = req.body;
   if (email.includes('@') && email.includes('.')) {
@@ -40,6 +49,7 @@ function checkPasswordIsValid(req, res, next) {
 module.exports = {
   checkIfUserExists,
   checkAllFieldsArePresent,
+  checkLoginFieldsArePresent,
   checkEmailIsValid,
   checkPasswordIsValid,
 };

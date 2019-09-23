@@ -16,37 +16,26 @@ Router.get('/', (req, res) => {
 });
 
 Router.post('/signup', middleware.checkAllFieldsArePresent,
-  middleware.checkIfUserExists,
   middleware.checkEmailIsValid,
+  middleware.checkIfUserExists,
   middleware.checkPasswordIsValid, (req, res) => {
     const newUserDetails = req.body;
     db.addNewUser(newUserDetails)
       .then((data) => {
         res.status(202).json(data);
       })
-      .then(() => {
-        db.getUserByEmail(newUserDetails.email)
-          .then((user) => {
-            if (user.password === newUserDetails.password) {
-              const token = jwt.generateToken(user);
-              res.status(200).json({ token });
-            } else {
-              res.status(401).json({ message: 'Invalid login credentials.' });
-            }
-          });
-      })
       .catch((err) => {
         res.status(500).json(err);
       });
   });
 
-Router.post('/login', middleware.checkEmailIsValid, (req, res) => {
+Router.post('/login', middleware.checkLoginFieldsArePresent, middleware.checkEmailIsValid, (req, res) => {
   const { email, password } = req.body;
   db.getUserByEmail(email)
     .then((user) => {
       if (user.password === password) {
         const token = jwt.generateToken(user);
-        res.status(200).json({ token });
+        res.status(200).json({ token, name: user.name, id: user.id });
       } else {
         res.status(401).json({ message: 'Invalid login credentials.' });
       }
