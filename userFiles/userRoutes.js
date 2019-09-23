@@ -24,6 +24,17 @@ Router.post('/signup', middleware.checkAllFieldsArePresent,
       .then((data) => {
         res.status(202).json(data);
       })
+      .then(() => {
+        db.getUserByEmail(newUserDetails.email)
+          .then((user) => {
+            if (user.password === newUserDetails.password) {
+              const token = jwt.generateToken(user);
+              res.status(200).json({ token });
+            } else {
+              res.status(401).json({ message: 'Invalid login credentials.' });
+            }
+          });
+      })
       .catch((err) => {
         res.status(500).json(err);
       });
