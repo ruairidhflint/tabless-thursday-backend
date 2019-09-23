@@ -15,7 +15,7 @@ Router.get('/', (req, res) => {
 });
 
 Router.get('/tabs', Auth.restrictedRoute, (req, res) => {
-  const { id } = req.headers;
+  const { id } = req.decodedToken;
   db.getUsersTabs(id)
     .then((data) => {
       res.status(200).json(data);
