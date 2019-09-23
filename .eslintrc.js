@@ -16,6 +16,7 @@ module.exports = {
   },
   rules: {
     'no-console': 0,
-    'func-names': 0
+    'func-names': 0,
+    'arrow-body-style': 0
   },
 };
