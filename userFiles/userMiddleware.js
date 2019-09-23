@@ -10,6 +10,16 @@ async function checkIfUserExists(req, res, next) {
   }
 }
 
+function checkAllFieldsArePresent(req, res, next) {
+  const { email, password, name } = req.body;
+  if (email && password && name) {
+    next();
+  } else {
+    res.status(400).json({ message: 'Please ensure all fields are present.' });
+  }
+}
+
 module.exports = {
   checkIfUserExists,
+  checkAllFieldsArePresent,
 };
