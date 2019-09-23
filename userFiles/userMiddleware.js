@@ -19,7 +19,17 @@ function checkAllFieldsArePresent(req, res, next) {
   }
 }
 
+function checkEmailIsValid(req, res, next) {
+  const { email } = req.body;
+  if (email.includes('@') && email.includes('.')) {
+    next();
+  } else {
+    res.status(400).json({ message: 'Please enter a valid email address.' });
+  }
+}
+
 module.exports = {
   checkIfUserExists,
   checkAllFieldsArePresent,
+  checkEmailIsValid,
 };
