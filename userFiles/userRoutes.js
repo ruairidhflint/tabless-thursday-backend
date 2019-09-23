@@ -35,7 +35,7 @@ Router.post('/login', middleware.checkEmailIsValid, (req, res) => {
     .then((user) => {
       if (user.password === password) {
         const token = jwt.generateToken(user);
-        console.log(token);
+        res.status(200).json({ token });
       } else {
         res.status(401).json({ message: 'Invalid login credentials.' });
       }
