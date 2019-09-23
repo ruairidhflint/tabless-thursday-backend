@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('./userHelpers');
 const middleware = require('./userMiddleware');
+const jwt = require('./userTokenGenerator');
 
 const Router = express.Router();
 
@@ -31,9 +32,10 @@ Router.post('/signup', middleware.checkAllFieldsArePresent,
 Router.post('/login', middleware.checkEmailIsValid, (req, res) => {
   const { email, password } = req.body;
   db.getUserByEmail(email)
-    .then((data) => {
-      if (data.password === password) {
-        res.status(202).json({ message: 'You are in baby!' });
+    .then((user) => {
+      if (user.password === password) {
+        const token = jwt.generateToken(user);
+        console.log(token);
       } else {
         res.status(401).json({ message: 'Invalid login credentials.' });
       }
