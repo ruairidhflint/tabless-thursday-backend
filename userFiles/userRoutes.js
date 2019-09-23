@@ -1,7 +1,7 @@
 const express = require('express');
 const db = require('./userHelpers');
 const middleware = require('./userMiddleware');
-const jwt = require('./userTokenGenerator');
+const jwt = require('../authFiles/tokenGenerator');
 
 const Router = express.Router();
 
