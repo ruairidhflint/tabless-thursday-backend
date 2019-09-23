@@ -5,6 +5,12 @@ function getAllUserEmails() {
     .select('email');
 }
 
+function getUserByEmail(email) {
+  return db('users')
+    .where({ email })
+    .select('email');
+}
+
 function addNewUser(newUser) {
   return db('users')
     .insert(newUser);
@@ -12,5 +18,6 @@ function addNewUser(newUser) {
 
 module.exports = {
   getAllUserEmails,
+  getUserByEmail,
   addNewUser,
 };

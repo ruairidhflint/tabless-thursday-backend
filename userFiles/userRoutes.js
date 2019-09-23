@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('./userHelpers');
+const middleware = require('./userMiddleware');
 
 const Router = express.Router();
 
@@ -13,7 +14,7 @@ Router.get('/', (req, res) => {
     });
 });
 
-Router.post('/signup', (req, res) => {
+Router.post('/signup', middleware.checkIfUserExists, (req, res) => {
   const newUserDetails = req.body;
   db.addNewUser(newUserDetails)
     .then((data) => {
