@@ -8,7 +8,7 @@ function getAllUserEmails() {
 function getUserByEmail(email) {
   return db('users')
     .where({ email })
-    .select('email');
+    .first();
 }
 
 function addNewUser(newUser) {

@@ -14,14 +14,29 @@ Router.get('/', (req, res) => {
     });
 });
 
-Router.post('/signup', middleware.checkAllFieldsArePresent, middleware.checkIfUserExists, middleware.checkEmailIsValid, middleware.checkPasswordIsValid, (req, res) => {
-  const newUserDetails = req.body;
-  db.addNewUser(newUserDetails)
+Router.post('/signup', middleware.checkAllFieldsArePresent,
+  middleware.checkIfUserExists,
+  middleware.checkEmailIsValid,
+  middleware.checkPasswordIsValid, (req, res) => {
+    const newUserDetails = req.body;
+    db.addNewUser(newUserDetails)
+      .then((data) => {
+        res.status(202).json(data);
+      })
+      .catch((err) => {
+        res.status(500).json(err);
+      });
+  });
+
+Router.post('/login', middleware.checkEmailIsValid, (req, res) => {
+  const { email, password } = req.body;
+  db.getUserByEmail(email)
     .then((data) => {
-      res.status(202).json(data);
-    })
-    .catch((err) => {
-      res.status(500).json(err);
+      if (data.password === password) {
+        res.status(202).json({ message: 'You are in baby!' });
+      } else {
+        res.status(401).json({ message: 'Invalid login credentials.' });
+      }
     });
 });
 
