@@ -2,8 +2,9 @@ const jwt = require('jsonwebtoken');
 
 function generateToken(user) {
   const payload = {
-    subject: user.id, // sub in payload is what the token is about
+    subject: user.id,
     email: user.email,
+    name: user.name,
   };
 
   const options = {
