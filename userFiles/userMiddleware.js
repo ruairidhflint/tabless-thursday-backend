@@ -28,8 +28,18 @@ function checkEmailIsValid(req, res, next) {
   }
 }
 
+function checkPasswordIsValid(req, res, next) {
+  const { password } = req.body;
+  if (password.length > 7) {
+    next();
+  } else {
+    res.status(400).json({ message: 'Password must be at least 8 characters long' });
+  }
+}
+
 module.exports = {
   checkIfUserExists,
   checkAllFieldsArePresent,
   checkEmailIsValid,
+  checkPasswordIsValid,
 };

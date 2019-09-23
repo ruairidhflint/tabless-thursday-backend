@@ -14,7 +14,7 @@ Router.get('/', (req, res) => {
     });
 });
 
-Router.post('/signup', middleware.checkAllFieldsArePresent, middleware.checkIfUserExists, middleware.checkEmailIsValid, (req, res) => {
+Router.post('/signup', middleware.checkAllFieldsArePresent, middleware.checkIfUserExists, middleware.checkEmailIsValid, middleware.checkPasswordIsValid, (req, res) => {
   const newUserDetails = req.body;
   db.addNewUser(newUserDetails)
     .then((data) => {
