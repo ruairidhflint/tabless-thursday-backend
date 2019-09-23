@@ -50,6 +50,9 @@ Router.post('/login', middleware.checkEmailIsValid, (req, res) => {
       } else {
         res.status(401).json({ message: 'Invalid login credentials.' });
       }
+    })
+    .catch((err) => {
+      res.status(500).json({ err });
     });
 });
 
