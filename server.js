@@ -1,13 +1,11 @@
 const express = require('express');
 const cors = require('cors');
+const userRoutes = require('./userFiles/userRoutes');
 
 const server = express();
 
 server.use(cors());
 server.use(express.json());
-
-server.get('/', (req, res) => {
-  res.status(200).json('Everything is working!');
-});
+server.use(userRoutes);
 
 module.exports = server;
