@@ -1,7 +1,10 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
+
 const db = require('./userHelpers');
 const middleware = require('./userMiddleware');
 const jwt = require('../authFiles/tokenGenerator');
+
 
 const Router = express.Router();
 
@@ -20,9 +23,19 @@ Router.post('/signup', middleware.checkAllFieldsArePresent,
   middleware.checkIfUserExists,
   middleware.checkPasswordIsValid, (req, res) => {
     const newUserDetails = req.body;
-    db.addNewUser(newUserDetails)
+    const { email, password, name } = newUserDetails;
+
+    const hashedPassword = bcrypt.hashSync(password, 12);
+
+    const newUser = {
+      email,
+      name,
+      password: hashedPassword,
+    };
+
+    db.addNewUser(newUser)
       .then((data) => {
-        res.status(202).json(data);
+          res.status(202).json(data);
       })
       .catch((err) => {
         res.status(500).json(err);
