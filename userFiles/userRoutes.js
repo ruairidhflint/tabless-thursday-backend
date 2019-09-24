@@ -35,7 +35,7 @@ Router.post('/signup', middleware.checkAllFieldsArePresent,
 
     db.addNewUser(newUser)
       .then((data) => {
-          res.status(202).json(data);
+        res.status(202).json(data);
       })
       .catch((err) => {
         res.status(500).json(err);
