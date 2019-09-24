@@ -1,4 +1,4 @@
-// const db = require('./tabHelpers');
+const db = require('./tabHelpers');
 
 function checkPostIsValid(req, res, next) {
   const { url, title } = req.body;
@@ -9,6 +9,17 @@ function checkPostIsValid(req, res, next) {
   }
 }
 
+async function checkTabIDIsValid(req, res, next) {
+  const { id } = req.params;
+  const validTab = await db.getTabByID(id);
+  if (validTab.length) {
+    next();
+  } else {
+    res.status(400).json({ message: 'Invalid ID for Tab' });
+  }
+}
+
 module.exports = {
   checkPostIsValid,
+  checkTabIDIsValid,
 };

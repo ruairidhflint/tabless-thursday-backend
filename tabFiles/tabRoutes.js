@@ -36,7 +36,6 @@ Router.post('/tabs', Auth.restrictedRoute, Middleware.checkPostIsValid, (req, re
   const newTab = {
     url, title, notes, user_id: id,
   };
-
   db.postNewTabByUserID(newTab)
     .then(() => {
       res.status(200).json({ message: 'Post success', data: newTab });
@@ -44,6 +43,22 @@ Router.post('/tabs', Auth.restrictedRoute, Middleware.checkPostIsValid, (req, re
     .catch(() => {
       res.status(500).json({ message: 'Post failed.' });
     });
+});
+
+Router.delete('/tabs/:id', Auth.restrictedRoute, Middleware.checkTabIDIsValid, (req, res) => {
+  const { id } = req.params;
+  const userID = req.decodedToken.id;
+  if (Number(id) === userID) {
+    db.deleteTabByTabID(id)
+      .then(() => {
+        res.status(200).json({ message: "Successfully deleted"})
+      })
+      .catch((err) => {
+        res.status(500).json({ err, message: "There was an error!" });
+      });
+  } else {
+    res.status(403).json({ message: "Invalid permissions" });
+  }
 });
 
 module.exports = Router;
