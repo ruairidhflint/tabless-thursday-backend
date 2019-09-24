@@ -8,6 +8,16 @@ const jwt = require('../authFiles/tokenGenerator');
 
 const Router = express.Router();
 
+Router.get('/', (req, res) => {
+  db.getAllUsers()
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      res.status(500).json({ message: 'Some kind of error', err})''
+    })
+});
+
 Router.post('/signup', middleware.checkAllFieldsArePresent,
   middleware.checkEmailIsValid,
   middleware.checkIfUserExists,

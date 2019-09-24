@@ -1,5 +1,9 @@
 const db = require('../database/dbConfig');
 
+function getAllUsers() {
+  return db('users');
+}
+
 function getUserByEmail(email) {
   return db('users')
     .where({ email })
@@ -21,4 +25,5 @@ module.exports = {
   getUserByEmail,
   addNewUser,
   deleteUser,
+  getAllUsers,
 };
