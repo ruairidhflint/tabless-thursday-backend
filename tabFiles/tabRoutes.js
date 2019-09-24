@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('./tabHelpers');
+const Middleware = require('./tabMiddleware');
 const Auth = require('../authFiles/restrictedMiddleware');
 
 const Router = express.Router();
@@ -29,7 +30,7 @@ Router.get('/tabs', Auth.restrictedRoute, (req, res) => {
     });
 });
 
-Router.post('/tabs', Auth.restrictedRoute, (req, res) => {
+Router.post('/tabs', Auth.restrictedRoute, Middleware.checkPostIsValid, (req, res) => {
   const { id } = req.decodedToken;
   const { url, title, notes } = req.body;
   const newTab = {
@@ -37,11 +38,11 @@ Router.post('/tabs', Auth.restrictedRoute, (req, res) => {
   };
 
   db.postNewTabByUserID(newTab)
-    .then((data) => {
-      console.log(data);
+    .then(() => {
+      res.status(200).json({ message: 'Post success', data: newTab });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(() => {
+      res.status(500).json({ message: 'Post failed.' });
     });
 });
 
