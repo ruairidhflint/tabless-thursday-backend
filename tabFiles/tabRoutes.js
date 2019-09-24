@@ -51,13 +51,13 @@ Router.delete('/tabs/:id', Auth.restrictedRoute, Middleware.checkTabIDIsValid, (
   if (Number(id) === userID) {
     db.deleteTabByTabID(id)
       .then(() => {
-        res.status(200).json({ message: "Successfully deleted"})
+        res.status(200).json({ message: 'Successfully deleted' });
       })
       .catch((err) => {
-        res.status(500).json({ err, message: "There was an error!" });
+        res.status(500).json({ err, message: 'There was an error!' });
       });
   } else {
-    res.status(403).json({ message: "Invalid permissions" });
+    res.status(403).json({ message: 'Invalid permissions' });
   }
 });
 
