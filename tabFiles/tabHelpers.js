@@ -6,7 +6,8 @@ function getAllTabs() {
 
 function getTabByID(id) {
   return db('tabs')
-    .where({ id });
+    .where({ id })
+    .first();
 }
 
 function getUsersTabs(userID) {
@@ -24,10 +25,17 @@ function deleteTabByTabID(id) {
     .where({ id })
     .del();
 }
+
+function updateTabByID(updatedTab, id) {
+  return db('tabs')
+    .where({ id })
+    .update(updatedTab);
+}
 module.exports = {
   getAllTabs,
   getTabByID,
   getUsersTabs,
   postNewTabByUserID,
   deleteTabByTabID,
+  updateTabByID,
 };

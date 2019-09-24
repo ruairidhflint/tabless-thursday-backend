@@ -12,7 +12,8 @@ function checkPostIsValid(req, res, next) {
 async function checkTabIDIsValid(req, res, next) {
   const { id } = req.params;
   const validTab = await db.getTabByID(id);
-  if (validTab.length) {
+  if (validTab) {
+    req.userID = validTab.user_id;
     next();
   } else {
     res.status(400).json({ message: 'Invalid ID for Tab' });

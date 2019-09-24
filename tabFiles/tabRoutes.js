@@ -61,4 +61,26 @@ Router.delete('/tabs/:id', Auth.restrictedRoute, Middleware.checkTabIDIsValid, (
   }
 });
 
+Router.put('/tabs/:id', Auth.restrictedRoute, Middleware.checkTabIDIsValid, Middleware.checkPostIsValid, (req, res) => {
+  const { id } = req.params;
+  const userID = req.decodedToken.id;
+  const updatedTab = {
+    url: req.body.url,
+    title: req.body.title,
+    notes: req.body.notes,
+    user_id: userID,
+  };
+  if (req.userID === Number(userID)) {
+    db.updateTabByID(updatedTab, id)
+      .then(() => {
+        res.status(202).json(updatedTab);
+      })
+      .catch(() => {
+        res.status(500).json({ message: 'There was an error updating your tab.' });
+      });
+  } else {
+    res.status(403).json({ message: 'Invalid permissions' });
+  }
+});
+
 module.exports = Router;
