@@ -46,7 +46,7 @@ Router.post('/login', middleware.checkLoginFieldsArePresent, middleware.checkEma
   const { email, password } = req.body;
   db.getUserByEmail(email)
     .then((user) => {
-      if (user.password === password) {
+      if (bcrypt.compareSync(password, user.password)) {
         const token = jwt.generateToken(user);
         res.status(200).json({ token, name: user.name, id: user.id });
       } else {
