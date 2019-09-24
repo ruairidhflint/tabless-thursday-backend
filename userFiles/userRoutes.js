@@ -48,4 +48,15 @@ Router.post('/login', middleware.checkLoginFieldsArePresent, middleware.checkEma
     });
 });
 
+Router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  db.deleteUser(id)
+    .then(() => {
+      res.status(200).json({ message: 'User account deleted.' });
+    })
+    .catch((err) => {
+      res.status(500).json({ err });
+    });
+});
+
 module.exports = Router;
