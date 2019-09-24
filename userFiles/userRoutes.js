@@ -3,8 +3,8 @@ const bcrypt = require('bcrypt');
 
 const db = require('./userHelpers');
 const middleware = require('./userMiddleware');
+const authMiddleware = require('../authFiles/restrictedMiddleware');
 const jwt = require('../authFiles/tokenGenerator');
-
 
 const Router = express.Router();
 
@@ -48,15 +48,19 @@ Router.post('/login', middleware.checkLoginFieldsArePresent, middleware.checkEma
     });
 });
 
-Router.delete('/:id', (req, res) => {
+Router.delete('/:id', authMiddleware.restrictedRoute, (req, res) => {
   const { id } = req.params;
-  db.deleteUser(id)
-    .then(() => {
-      res.status(200).json({ message: 'User account deleted.' });
-    })
-    .catch((err) => {
-      res.status(500).json({ err });
-    });
+  if (Number(id) === req.decodedToken.id) {
+    db.deleteUser(id)
+      .then(() => {
+        res.status(200).json({ message: 'User account deleted.' });
+      })
+      .catch((err) => {
+        res.status(500).json({ err });
+      });
+  } else {
+    res.status(400).json({ message: 'You do not have permissions to perform this action' });
+  }
 });
 
 module.exports = Router;
