@@ -29,4 +29,20 @@ Router.get('/tabs', Auth.restrictedRoute, (req, res) => {
     });
 });
 
+Router.post('/tabs', Auth.restrictedRoute, (req, res) => {
+  const { id } = req.decodedToken;
+  const { url, title, notes } = req.body;
+  const newTab = {
+    url, title, notes, user_id: id,
+  };
+
+  db.postNewTabByUserID(newTab)
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 module.exports = Router;

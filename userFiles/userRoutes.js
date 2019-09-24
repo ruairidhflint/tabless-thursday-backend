@@ -14,9 +14,7 @@ Router.post('/signup', middleware.checkAllFieldsArePresent,
   middleware.checkPasswordIsValid, (req, res) => {
     const newUserDetails = req.body;
     const { email, password, name } = newUserDetails;
-
     const hashedPassword = bcrypt.hashSync(password, 12);
-
     const newUser = {
       email,
       name,

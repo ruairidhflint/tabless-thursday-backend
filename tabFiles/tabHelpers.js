@@ -9,7 +9,12 @@ function getUsersTabs(userID) {
     .where({ user_id: userID });
 }
 
+function postNewTabByUserID(newTab) {
+  return db('tabs')
+    .insert(newTab);
+}
 module.exports = {
   getAllTabs,
   getUsersTabs,
+  postNewTabByUserID,
 };
