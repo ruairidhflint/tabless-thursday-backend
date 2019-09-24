@@ -1,5 +1,4 @@
 const db = require('./userHelpers');
-const bcrypt = require('bcrypt');
 
 async function checkIfUserExists(req, res, next) {
   const { email } = req.body;
