@@ -14,7 +14,7 @@ Router.get('/', (req, res) => {
       res.status(200).json(data);
     })
     .catch((err) => {
-      res.status(500).json({ message: 'Some kind of error', err});
+      res.status(500).json({ message: 'Some kind of error', err });
     });
 });
 
