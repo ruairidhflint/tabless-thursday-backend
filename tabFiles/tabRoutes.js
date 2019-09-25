@@ -2,6 +2,7 @@ const express = require('express');
 const db = require('./tabHelpers');
 const Middleware = require('./tabMiddleware');
 const Auth = require('../authFiles/restrictedMiddleware');
+const Errors = require('../errorHandling/errors');
 
 const Router = express.Router();
 
@@ -22,11 +23,11 @@ Router.get('/tab', Auth.restrictedRoute, (req, res) => {
       if (data.length) {
         res.status(200).json(data);
       } else {
-        res.status(200).json({ message: 'No saved tabs yet!' });
+        res.status(200).json({ message: Errors.noSavedTabs });
       }
     })
     .catch((err) => {
-      res.status(500).json({ err });
+      res.status(500).json(err);
     });
 });
 
@@ -38,10 +39,10 @@ Router.post('/tab', Auth.restrictedRoute, Middleware.checkPostIsValid, (req, res
   };
   db.postNewTabByUserID(newTab)
     .then(() => {
-      res.status(200).json({ message: 'Post success', data: newTab });
+      res.status(200).json({ message: Errors.postSuccess, data: newTab });
     })
     .catch(() => {
-      res.status(500).json({ message: 'Post failed.' });
+      res.status(500).json({ message: Errors.postFailed });
     });
 });
 
@@ -52,13 +53,13 @@ Router.delete('/tab/:id', Auth.restrictedRoute, Middleware.checkTabIDIsValid, (r
   if (requiredUserID === userID) {
     db.deleteTabByTabID(id)
       .then(() => {
-        res.status(200).json({ message: 'Successfully deleted' });
+        res.status(200).json({ message: Errors.successfulDeletion });
       })
       .catch((err) => {
-        res.status(500).json({ err, message: 'There was an error!' });
+        res.status(500).json({ err, message: Errors.error });
       });
   } else {
-    res.status(403).json({ message: 'Invalid permissions' });
+    res.status(403).json({ message: Errors.invalidPermissions });
   }
 });
 
@@ -77,10 +78,10 @@ Router.put('/tab/:id', Auth.restrictedRoute, Middleware.checkTabIDIsValid, Middl
         res.status(202).json(updatedTab);
       })
       .catch(() => {
-        res.status(500).json({ message: 'There was an error updating your tab.' });
+        res.status(500).json({ message: Errors.error });
       });
   } else {
-    res.status(403).json({ message: 'Invalid permissions' });
+    res.status(403).json({ message: Errors.invalidPermissions });
   }
 });
 

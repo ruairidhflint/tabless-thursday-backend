@@ -5,6 +5,7 @@ const db = require('./userHelpers');
 const middleware = require('./userMiddleware');
 const authMiddleware = require('../authFiles/restrictedMiddleware');
 const jwt = require('../authFiles/tokenGenerator');
+const Errors = require('../errorHandling/errors');
 
 const Router = express.Router();
 
@@ -14,7 +15,7 @@ Router.get('/', (req, res) => {
       res.status(200).json(data);
     })
     .catch((err) => {
-      res.status(500).json({ message: 'Some kind of error', err });
+      res.status(500).json({ message: Errors.error, err });
     });
 });
 
@@ -48,7 +49,7 @@ Router.post('/login', middleware.checkLoginFieldsArePresent, middleware.checkEma
         const token = jwt.generateToken(user);
         res.status(200).json({ token, name: user.name, id: user.id });
       } else {
-        res.status(401).json({ message: 'Invalid login credentials.' });
+        res.status(401).json({ message: Errors.invalidLoginDetails });
       }
     })
     .catch((err) => {
@@ -61,13 +62,13 @@ Router.delete('/:id', authMiddleware.restrictedRoute, (req, res) => {
   if (Number(id) === req.decodedToken.id) {
     db.deleteUser(id)
       .then(() => {
-        res.status(200).json({ message: 'User account deleted.' });
+        res.status(200).json({ message: Errors.successfulDeletion });
       })
       .catch((err) => {
         res.status(500).json({ err });
       });
   } else {
-    res.status(400).json({ message: 'You do not have permissions to perform this action' });
+    res.status(400).json({ message: Errors.invalidPermissions });
   }
 });
 

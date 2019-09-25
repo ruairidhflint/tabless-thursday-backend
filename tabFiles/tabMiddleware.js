@@ -1,11 +1,13 @@
 const db = require('./tabHelpers');
+const Errors = require('../errorHandling/errors');
+
 
 function checkPostIsValid(req, res, next) {
   const { url, title } = req.body;
   if (url && title) {
     next();
   } else {
-    res.status(500).json({ message: 'Please ensure there is a URL and a Title' });
+    res.status(500).json({ message: Errors.allFieldsPresent });
   }
 }
 
@@ -16,7 +18,7 @@ async function checkTabIDIsValid(req, res, next) {
     req.userID = validTab.user_id;
     next();
   } else {
-    res.status(400).json({ message: 'Invalid ID for Tab' });
+    res.status(400).json({ message: Errors.invalidTabID });
   }
 }
 
