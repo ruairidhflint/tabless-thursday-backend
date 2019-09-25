@@ -5,7 +5,7 @@ const Auth = require('../authFiles/restrictedMiddleware');
 
 const Router = express.Router();
 
-Router.get('/', (req, res) => {
+Router.get('/all', (req, res) => {
   db.getAllTabs()
     .then((data) => {
       res.status(200).json(data);
@@ -15,7 +15,7 @@ Router.get('/', (req, res) => {
     });
 });
 
-Router.get('/tabs', Auth.restrictedRoute, (req, res) => {
+Router.get('/tab', Auth.restrictedRoute, (req, res) => {
   const { id } = req.decodedToken;
   db.getUsersTabs(id)
     .then((data) => {
@@ -30,7 +30,7 @@ Router.get('/tabs', Auth.restrictedRoute, (req, res) => {
     });
 });
 
-Router.post('/tabs', Auth.restrictedRoute, Middleware.checkPostIsValid, (req, res) => {
+Router.post('/tab', Auth.restrictedRoute, Middleware.checkPostIsValid, (req, res) => {
   const { id } = req.decodedToken;
   const { url, title, notes } = req.body;
   const newTab = {
@@ -45,10 +45,11 @@ Router.post('/tabs', Auth.restrictedRoute, Middleware.checkPostIsValid, (req, re
     });
 });
 
-Router.delete('/tabs/:id', Auth.restrictedRoute, Middleware.checkTabIDIsValid, (req, res) => {
+Router.delete('/tab/:id', Auth.restrictedRoute, Middleware.checkTabIDIsValid, (req, res) => {
   const { id } = req.params;
+  const requiredUserID = req.userID;
   const userID = req.decodedToken.id;
-  if (Number(id) === userID) {
+  if (requiredUserID === userID) {
     db.deleteTabByTabID(id)
       .then(() => {
         res.status(200).json({ message: 'Successfully deleted' });
@@ -61,7 +62,7 @@ Router.delete('/tabs/:id', Auth.restrictedRoute, Middleware.checkTabIDIsValid, (
   }
 });
 
-Router.put('/tabs/:id', Auth.restrictedRoute, Middleware.checkTabIDIsValid, Middleware.checkPostIsValid, (req, res) => {
+Router.put('/tab/:id', Auth.restrictedRoute, Middleware.checkTabIDIsValid, Middleware.checkPostIsValid, (req, res) => {
   const { id } = req.params;
   const userID = req.decodedToken.id;
   const updatedTab = {
