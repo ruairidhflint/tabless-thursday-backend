@@ -40,7 +40,7 @@ Router.post('/signup', middleware.checkAllFieldsArePresent,
       });
   });
 
-Router.post('/', middleware.checkLoginFieldsArePresent, middleware.checkEmailIsValid, (req, res) => {
+Router.post('/login', middleware.checkLoginFieldsArePresent, middleware.checkEmailIsValid, (req, res) => {
   const { email, password } = req.body;
   db.getUserByEmail(email)
     .then((user) => {
