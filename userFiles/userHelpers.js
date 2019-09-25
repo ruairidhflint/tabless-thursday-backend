@@ -2,7 +2,7 @@ const db = require('../database/dbConfig');
 
 function getAllUsers() {
   return db('users')
-    .select('email');
+    .select('email', 'id');
 }
 
 function getUserByEmail(email) {
