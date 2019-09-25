@@ -1,10 +1,11 @@
 const db = require('./userHelpers');
+const Errors = require('../errorHandling/errors');
 
 async function checkIfUserExists(req, res, next) {
   const { email } = req.body;
   const user = await db.getUserByEmail(email);
   if (user) {
-    res.status(409).json({ message: 'This email has already been used!' });
+    res.status(409).json({ message: Errors.emailUsed });
   } else {
     next();
   }
@@ -15,7 +16,7 @@ function checkAllFieldsArePresent(req, res, next) {
   if (email && password && name) {
     next();
   } else {
-    res.status(400).json({ message: 'Please ensure all fields are present.' });
+    res.status(400).json({ message: Errors.allFieldsPresent });
   }
 }
 
@@ -24,7 +25,7 @@ function checkLoginFieldsArePresent(req, res, next) {
   if (email && password) {
     next();
   } else {
-    res.status(400).json({ message: 'Please ensure all fields are present.' });
+    res.status(400).json({ message: Errors.allFieldsPresent });
   }
 }
 
@@ -33,7 +34,7 @@ function checkEmailIsValid(req, res, next) {
   if (email.includes('@') && email.includes('.')) {
     next();
   } else {
-    res.status(400).json({ message: 'Please enter a valid email address.' });
+    res.status(400).json({ message: Errors.invalidEmaiLFormat });
   }
 }
 
@@ -42,7 +43,7 @@ function checkPasswordIsValid(req, res, next) {
   if (password.length > 7) {
     next();
   } else {
-    res.status(400).json({ message: 'Password must be at least 8 characters long' });
+    res.status(400).json({ message: Errors.passwordFormat });
   }
 }
 
